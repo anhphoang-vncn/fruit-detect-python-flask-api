@@ -4,7 +4,7 @@ Python API for Fruit detect using Tensorflow
 
 -   Run
 
-# python api_server.py
+<code> python api_server.py </code>
 
 #AnhFang <br>
 contact: phoanganh148@gmail.com<br>
