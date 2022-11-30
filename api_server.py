@@ -8,7 +8,7 @@ from keras.layers import Dense, Dropout
 import tensorflow as tf
 from keras.layers import GlobalAveragePooling2D, Dense, Dropout
 from keras.models import Model
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 
 n_class = 10
@@ -51,10 +51,10 @@ CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 # @app.route("/api/classifier/<string:fruit_b64>", methods=['POST', 'GET'])
-@app.route("/api/classifier", methods=['POST', 'GET'])
+@app.route("/api/classifier", methods=['POST'])
 @cross_origin(origins='*')
 def detect():
-    fruit_b64 = request.form.get('fruit_b64')
+    fruit_b64 = request.json['fruit_b64']
     fruit_pil = base64_to_pil_image(fruit_b64)
     fruit_cv2 = np.array(fruit_pil)
     # resize
@@ -66,7 +66,18 @@ def detect():
     # classifi
     predicted_class = model.predict(image)
     output = str(np.argmax(predicted_class))
-    return output
+    return jsonify({
+            "api_name":"AnhFang fruit detect API",
+            "fruit_detect": output,
+            })
+
+@app.route("/api/test", methods=['POST', 'GET'])
+@cross_origin(origins='*')
+def testFuntion():
+    return jsonify([{
+            "api_name":"AnhFang fruit detect API",
+            "fruit_detect": "test ok",
+            }])
 
 # Start BE
 if __name__ == '__main__':
